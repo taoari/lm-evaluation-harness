@@ -384,7 +384,7 @@ def make_table(result_dict):
     values = []
 
     for k, dic in result_dict["results"].items():
-        version = result_dict["versions"][k]
+        version = result_dict["versions"].get(k,-1) # for virtual tasks, set version to -1
         for m, v in dic.items():
             if m.endswith("_stderr"):
                 continue

@@ -52,6 +52,7 @@ def parse_args():
     parser.add_argument("--check_integrity", action="store_true")
     parser.add_argument("--write_out", action="store_true", default=False)
     parser.add_argument("--output_base_path", type=str, default=None)
+    parser.add_argument("--average_tasks", action="store_true")
 
     return parser.parse_args()
 
@@ -106,6 +107,19 @@ def main():
         write_out=args.write_out,
         output_base_path=args.output_base_path,
     )
+
+
+    def dict_mean(dict_list):
+        mean_dict = {}
+        for key in dict_list[0].keys():
+            mean_dict[key] = sum(d[key] for d in dict_list) / len(dict_list)
+        return mean_dict
+
+    if args.average_tasks:
+        try:
+            results['results']['AVERAGE'] = dict_mean(list(results['results'].values()))
+        except:
+            print("WARNING: ALL TASKS EVALUATIONS METRICS MUST BE THE SAME.")
 
     dumped = json.dumps(results, indent=2)
     print(dumped)
